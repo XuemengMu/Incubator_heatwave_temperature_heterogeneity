@@ -30,7 +30,7 @@ Temp_data$SWA <- as.factor(Temp_data$SWA)
 Temp_data$Plant_id <- as.factor(Temp_data$Plant_id)
 
 #Define the model
-hist(log10(log10(Temp_data$Leaf_temperature)))  ## SHOULD WE REMOVE THE DOUBLE LOG10?
+hist(log10(log10(Temp_data$Leaf_temperature)))
 Temp_dlnorm <- glmmTMB(
   log10(log10(Leaf_temperature)) ~
     HW_intensity * SWA + (1 | Plant_id / Leaf_id),
@@ -43,7 +43,7 @@ plot(simulateResiduals(Temp_dlnorm)) #simulateResiduals() is used to simulate th
 summary_model <- summary(Temp_dlnorm)
 coef_summary <- coef(summary_model)
 
-##Without double log()#####    !!!!!THE SIGNIGICANT RESULT IS THE SAME AS ABOVE!!!!!
+##Without double log()### DO WE NEED THIS?
 
 hist(Temp_data$Leaf_temperature)  ## SHOULD WE REMOVE THE DOUBLE LOG10?
 Temp_dlnorm_rm <- glmmTMB(
@@ -136,6 +136,7 @@ ggplot(Temp_data3, aes(x = grp, y = abs_dev)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 library(dplyr)
+
 
 
 
