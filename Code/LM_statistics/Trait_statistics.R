@@ -153,7 +153,7 @@ hist(Height_difference_data$Height_difference)
 # 2.Step-wise model selection
 HD_lm <- lm(Height_difference ~ Duration * Intensity_level * SWA_level, data = Height_difference_data)
 step <- stepAIC(HD_lm, trace = 0, direction="backward")
-step$anova # The best is HD_lm3
+step$anova
 HD_lm_best <- lm(Height_difference ~ Duration + Intensity_level + SWA_level + Duration:Intensity_level + Intensity_level:SWA_level, data = Height_difference_data)
 
 # 3.Check Models + Anova
