@@ -9,15 +9,17 @@ library(DHARMa)
 library(readr)
 library(gt)
 library(effectsize)
+library(tidyverse)
+library(car)
 
 #Import data
 
-all_data <- read_csv("Datasheet_measurement_day_onesheet.csv")
+all_data <- read_csv("Data/Datasheet_measurement_day_onesheet.csv")
 all_data$Intensity_level <-
   factor(all_data$Intensity_level,
          levels = c("Control", "Mild", "Intense"))
 Temp_data <-
-  read.csv("Temp_variance_day_3_expand.csv") #data collected on all the plants on Day 3
+  read.csv("Data/Temp_variance_day_3_expand.csv") #data collected on all the plants on Day 3
 Temp_data <- Temp_data[,-which(names(Temp_data) == "X")]
 
 #Convert variable as necessary
@@ -37,13 +39,13 @@ Temp_dlnorm <- glmmTMB(
   dispformula = ~ HW_intensity * SWA,
   data = Temp_data,
   family = gaussian(link = "identity")
-) #indicating that you're fitting a model where the response variable follows a Gaussian (normal) distribution, and the link function used to relate the linear predictor to the mean of the response is the identity function (no need for any transformation). This is suitable for modeling continuous response variables when you expect a linear relationship between the predictor variables and the response.
+)  
 plot(simulateResiduals(Temp_dlnorm)) #simulateResiduals() is used to simulate the residuals from the more complex models.
 
 summary_model <- summary(Temp_dlnorm)
 coef_summary <- coef(summary_model)
 
-##Without double log()### DO WE NEED THIS?
+##Without double log() as a check 
 
 hist(Temp_data$Leaf_temperature)  ## SHOULD WE REMOVE THE DOUBLE LOG10?
 Temp_dlnorm_rm <- glmmTMB(
@@ -90,15 +92,7 @@ disp_coefs <- coef_summary$disp %>%
 write.csv(disp_coefs, "disp_coefs.csv")
 
 
-
-
-
-
-
 ##### Compare the variation of the data directly ######
-library(dplyr)
-library(car)
-library(ggplot2)
 
 # 1. Create combined group factor and compute variance per group
 grouped_vars <- Temp_data %>%
@@ -134,17 +128,6 @@ ggplot(Temp_data3, aes(x = grp, y = abs_dev)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-library(dplyr)
-
-
-
-
-
-
-
-
-
 
 ###### Pairwise comparison betweem groups ######
 
@@ -187,9 +170,6 @@ for (i in seq_len(nrow(pairwise_combos))) {
   
   # 5a. Run an F‐test for equality of variances
   ft <- var.test(x1, x2)
-  # If you prefer Fligner–Killeen (nonparametric), replace the line above with:
-  # ft <- fligner.test(Leaf_temperature ~ grp, data = Temp_data2 %>% filter(grp %in% c(g1, g2)))
-  
   # Store results
   pairwise_results[i, ] <- list(
     group1    = g1,
