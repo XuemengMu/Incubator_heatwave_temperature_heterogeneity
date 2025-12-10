@@ -20,7 +20,7 @@ all_data$Intensity_level <-
          levels = c("Control", "Mild", "Intense"))
 
 #Prepare data (Fv/Fm and Fv/Fm difference after treatment(<11days), NO recovery period(>=17days))
-Fv_Fm_data <- all_data %>% select(Day,Fv_Fm, Fv_Fm_difference,Intensity_level, SWA_level)%>% 
+Fv_Fm_data <- all_data %>% select(Day,Fv_Fm, Fv_Fm_difference, Intensity_level, SWA_level)%>% 
   filter(!(is.na(Fv_Fm) & is.na(Fv_Fm_difference)))%>% 
   filter(Day < 11)%>%
   mutate(

@@ -27,7 +27,6 @@ Temp_data <- Temp_data %>%
 
 ##### Table 1. glmmTMB conditional- and dispersion-model estimated effects #####----
 #Model with leaf temperature log-transformed TWICE
-hist(log10(log10(Temp_data$Leaf_temperature)))
 Temp_data$log10_log10_Leaf_temperature <- log10(log10(Temp_data$Leaf_temperature))
 Temp_dlnorm <- glmmTMB(
   log10_log10_Leaf_temperature ~
@@ -39,10 +38,10 @@ Temp_dlnorm <- glmmTMB(
 
 plot(simulateResiduals(Temp_dlnorm))
 summary_model <- summary(Temp_dlnorm)
+
 coef_summary <- coef(summary_model)
 
 #Model without log-transformation on leaf temperature (as a comparison only)
-hist(Temp_data$Leaf_temperature)
 Temp_dlnorm_rm <- glmmTMB(
    Leaf_temperature ~
     HW_intensity * SWA_level + (1 | Plant_id / Leaf_id),

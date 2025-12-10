@@ -42,7 +42,6 @@ Leaf_number_data <- all_data %>%
   filter(!is.na(Leaf_number_difference))
 
 # 2.Step-wise Model Selection
-hist(log(Leaf_number_data$Leaf_number_difference+10))
 LN_lm <- lm(log(Leaf_number_data$Leaf_number_difference+10) ~ Duration * Intensity_level * SWA_level, data = Leaf_number_data)
 step <- stepAIC(LN_lm, trace = 0, direction="backward")
 step$anova
@@ -65,7 +64,6 @@ eta_squared(LN_lm_best)%>%
 ## Second/Last Time of Measurement: After recovery
 # 1.Prepare Data
 LN_recovery_data <- all_data %>% filter(Day >11)
-hist(LN_recovery_data$Leaf_number_difference)
 
 # 2.Step-wise Model Selection
 LN_recovery_lm <- lm(LN_recovery_data$Leaf_number_difference ~ Duration * Intensity_level * SWA_level, data = LN_recovery_data)
@@ -89,7 +87,6 @@ Fv_Fm_data <- all_data %>% filter(Day <11)
 Fv_Fm_data <- Fv_Fm_data[!is.na(Fv_Fm_data$Fv_Fm), ]
 
 # 2.Step-wise Model Selection
-hist(Fv_Fm_data$Fv_Fm_difference)
 Fv_Fm_lm <- lm(Fv_Fm_difference ~ Duration * Intensity_level * SWA_level, data = Fv_Fm_data)
 step <- stepAIC(Fv_Fm_lm, trace = 0, direction="backward")
 step$anova
@@ -100,8 +97,7 @@ check_model(Fv_Fm_best)
 anova(Fv_Fm_best)
 summary(Fv_Fm_best)
 
-
-S# 4.Effect Size (Proportion of variance explained)
+# 4.Effect Size (Proportion of variance explained)
 eta_squared(Fv_Fm_best)%>% 
   data.frame() %>% 
   gt() %>%
@@ -114,7 +110,6 @@ Fv_fm_recovery_data <- all_data %>% filter(Day >11)
 Fv_fm_recovery_data <- Fv_fm_recovery_data[!is.na(Fv_fm_recovery_data$Fv_Fm), ]
 
 # 2.Step-wise Model selection
-hist((Fv_fm_recovery_data$Fv_Fm_difference))
 Fv_Fm_recovery_lm <- lm(Fv_Fm_difference ~ Duration * Intensity_level * SWA_level, data = Fv_fm_recovery_data)
 step <- stepAIC(Fv_Fm_recovery_lm, trace = 0, direction="backward")
 step$anova
@@ -139,7 +134,6 @@ eta_squared(Fv_Fm_recovery_best)%>%
 # 1.Prepare Data
 LWP_data <- all_data %>% filter(Day <11)
 LWP_data <- LWP_data[!is.na(LWP_data$Leaf_water_potential), ]
-hist(LWP_data$Leaf_water_potential)
 
 # 2.Step-wise Model selection
 LWP_lm <- lm(Leaf_water_potential ~ Duration * Intensity_level * SWA_level, data = LWP_data) #Duration * SWA_level +Intensity_level * SWA_level
@@ -165,7 +159,6 @@ eta_squared(LWP_lm_best)%>%
 # 1.Prepare Data
 Height_difference_data <- all_data %>% filter (Day < 11)
 Height_difference_data <- Height_difference_data[!is.na(Height_difference_data$Height_difference),]
-hist(Height_difference_data$Height_difference)
 
 # 2.Step-wise model selection
 HD_lm <- lm(Height_difference ~ Duration * Intensity_level * SWA_level, data = Height_difference_data)
@@ -189,7 +182,6 @@ eta_squared(HD_lm_best)%>%
 # 1.Prepare Data
 HD_recovery_data <- all_data %>% filter(Day > 11)
 HD_recovery_data <- HD_recovery_data[!is.na(HD_recovery_data$Height_difference),]
-hist(HD_recovery_data$Height_difference)
 
 # 2.Step-wise model selection
 HD_lm_recovery <- lm(Height_difference ~ Duration * Intensity_level * SWA_level, data = HD_recovery_data)
@@ -213,7 +205,6 @@ eta_squared(HD_recovery_lm_best)%>%
 ### YELLOW: GREEN LEAF BIOMASS RATIO----
 # 1.Import Data
 Yellow_Green_data <- read.csv("Yellow_Green_data.csv")
-hist(Yellow_Green_data$Dry_yellow_green_leaf_mass) 
 
 # 2.Step-wise Model Selection (Due to the data distribution, we used 'glm' rather than 'lm')
 YG_glm <- glm(Dry_yellow_green_leaf_mass ~ Duration * Intensity_level * SWA_level, data = Yellow_Green_data,family=binomial())

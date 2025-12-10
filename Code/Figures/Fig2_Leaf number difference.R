@@ -37,7 +37,7 @@ LN_data_treatment <- Leaf_number_data %>%
 
 LN_data_recovery <- all_data %>%
   filter(Day > 11) %>%
-  select(Pot, Leaf_number_difference) %>%
+  dplyr::select(Pot, Leaf_number_difference) %>%
   rename(LND_recovery = Leaf_number_difference)
 
 LN_data_combined <- LN_data_treatment %>%
