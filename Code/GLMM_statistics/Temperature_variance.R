@@ -67,7 +67,7 @@ disp_coefs <- coef_summary$disp %>%
 
 
 
-##### Table S1. Pairwise Comparisons of Within-Leaf Temperature Variance] #####----
+##### Table S2. Pairwise Comparisons of Within-Leaf Temperature Variance] #####----
 #Create a combined grouping factor
 Temp_data$HW_intensity <- factor(Temp_data$HW_intensity,levels=c("Control", "Mild", "Intense"))
 Temp_data2 <- Temp_data %>%
