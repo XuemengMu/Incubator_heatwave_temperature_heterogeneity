@@ -30,7 +30,7 @@ Temp_data <- Temp_data %>%
 Temp_data$log10_log10_Leaf_temperature <- log10(log10(Temp_data$Leaf_temperature))
 Temp_dlnorm <- glmmTMB(
   log10_log10_Leaf_temperature ~
-    HW_intensity * SWA_level+ (1 | Plant_id/Leaf_id),
+    HW_intensity * SWA_level + (1 | Plant_id/Leaf_id),
   dispformula = ~ HW_intensity * SWA_level,
   data = Temp_data,
   family = gaussian(link = "identity")
@@ -67,7 +67,7 @@ disp_coefs <- coef_summary$disp %>%
 
 
 
-##### Table S2. Pairwise Comparisons of Within-Leaf Temperature Variance] #####----
+##### Table S2. Pairwise Comparisons of Within-Leaf Temperature Variance #####----
 #Create a combined grouping factor
 Temp_data$HW_intensity <- factor(Temp_data$HW_intensity,levels=c("Control", "Mild", "Intense"))
 Temp_data2 <- Temp_data %>%
@@ -121,3 +121,35 @@ for (i in seq_len(nrow(pairwise_combos))) {
 
 #Inspect the assembled table
 print(pairwise_results)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## NEW! 24 June 2026 Analysis table for Within-leaf temperature range (Fig 1 panel a). --> Didn't work, the model result was not reliable.
+
+Temp_range <- read_csv("Leaf_temp_variation_summary.csv")
+hist(Temp_range$temp_range)
+
+Temp_range_dlnorm <- glmmTMB(
+  Temp_range_log ~
+    HW_intensity * SWA_level + (1 | Plant_id/Leaf_id),
+  dispformula = ~ HW_intensity * SWA_level,
+  data = Temp_range,
+  family = gaussian(link = "identity")
+) 
+
+plot(simulateResiduals(Temp_range_dlnorm))
+summary_model <- summary(Temp_range_dlnorm)
+
+coef_summary <- coef(Temp_range_dlnorm)

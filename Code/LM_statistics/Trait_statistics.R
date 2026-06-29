@@ -152,6 +152,36 @@ eta_squared(LWP_lm_best)%>%
   gt() %>%
   fmt_number(decimals = 3)
 
+#Pairwise comparison based on Intensity_level/Duration/SWA_level respectively
+library(dplyr)
+library(emmeans)
+install.packages("multcomp")
+library(multcomp)
+install.packages("multcompView")
+library(multcompView)
+
+LWP_data <- LWP_data %>%
+  mutate(
+    Duration = factor(Duration, levels = c(3, 6, 10)),
+    Intensity_level = factor(Intensity_level, levels = c("Control", "Mild", "Intense")),
+    SWA_level = factor(SWA_level, levels = c("Dry", "Wet"))
+  )
+
+LWP_lm_best <- lm(Leaf_water_potential ~ Duration * Intensity_level * SWA_level, data = LWP_data)
+
+emm_intensity <- emmeans(
+  LWP_lm_best,
+  ~ Intensity_level | Duration * SWA_level
+)
+pairs(emm_intensity, adjust = "tukey")
+
+emm_SWA_level <- emmeans(
+  LWP_lm_best,
+  ~ SWA_level | Duration * Intensity_level
+)
+pairs(emm_SWA_level, adjust = "tukey")
+
+LWP_means_table
 
 
 ### PLANT HEIGHT GROWTH----
