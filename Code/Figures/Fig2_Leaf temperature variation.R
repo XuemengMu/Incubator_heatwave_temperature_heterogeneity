@@ -3,6 +3,7 @@
 
 #Datasets needed
 Leaf_temperature_day3.csv
+Leaf_temperature_variation.csv
 
 #R Packages needed
 library(ggplot2)
@@ -14,7 +15,7 @@ setwd("~/Downloads")
 
 #### Figure 2a: within-leaf temperature range of each leaf individuals among treatment groups ####
 #Import and prepare data
-Temp_range <- read_csv("Leaf_temp_variation_summary.csv")
+Temp_range <- read_csv("Leaf_temperature_variation.csv")
 Temp_range <- Temp_range %>% mutate(HW_intensity = factor(HW_intensity, levels = c("Control", "Mild", "Intense")))
 
 #Plotting
@@ -126,3 +127,4 @@ combined_plot <- ggarrange(
 )
 
 combined_plot
+
