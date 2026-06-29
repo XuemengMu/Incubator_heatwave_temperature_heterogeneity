@@ -5,7 +5,7 @@
 Main_data.csv
 
 #Load packages
-library(tidyr)
+library(tidyverse)
 library(grid)
 library(gridExtra)
 

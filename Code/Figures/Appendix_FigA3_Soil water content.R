@@ -6,7 +6,6 @@ SWC_data.csv
 
 #Load packages
 library(tidyverse)
-library(ggplot2)
 
 #Set working directory to the folder containing code and data
 setwd("~/Downloads")
@@ -50,3 +49,4 @@ SWC_mean_sd <- SWC_data %>%
   group_by(SWC_level) %>%
   summarise(avg = mean(SWC), SD= sd(SWC))
 SWC_mean_sd
+

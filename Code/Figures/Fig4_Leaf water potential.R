@@ -6,8 +6,7 @@ Main_data.csv
 
 #Load packages
 #install.packages(c("rstatix", "ggpubr"))
-library(ggplot2)
-library(dplyr)
+library(tidyverse)
 library(rstatix)
 library(ggpubr)
 

@@ -1,0 +1,57 @@
+---
+title: "README"
+author: "Xuemeng Mu"
+date: "2026-06-29"
+output: html_document
+---
+
+**[Heatwaves increase sub-leaf-scale heterogeneity in leaf temperature]**
+Xuemeng Mu, Mark K. J. Ooi, Rocco F. Notarnicola, Will K. Cornwell
+
+This repository contains the data and R scripts used to analyse the effects of heatwave intensity, heatwave duration, and soil water availability on leaf temperature and plant physiological responses in *Xerochrysum bracteatum*.
+
+## Repository structure
+
+text
+.
+├── Data/       # Datasets used in the analyses
+├── Code/       # R scripts for analysis and figures
+└── README.md
+
+## Data
+
+The Data/ folder contains the cleaned datasets used for statistical analyses and figure production.
+
+## Code
+
+The scripts in the Code/ folder reproduce the analyses and figures reported in the manuscript.
+
+Please run them in numerical order:
+
+1. GLMM_statistics.R
+2. LM_statistics.R
+3. Figures.R
+
+## Required R packages
+
+install.packages(
+  c(
+    "tidyverse",
+    "glmmTMB",
+    "emmeans",
+    "DHARMa",
+    "patchwork",
+    "ggpubr",
+    "gridExtra",
+    "viridis",
+    "rstatix",
+    "gt",
+    "car",
+    "gamlss",
+    "effectsize"
+  )
+)
+
+## Reproducibility
+
+To reproduce the analyses, clone or download this repository, open it in RStudio, and run the scripts in the order listed above.

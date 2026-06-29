@@ -8,10 +8,8 @@ Leaf_temperature_day3.csv
 library(gt)
 library(car)
 library(MASS)
-library(readr)
-library(dplyr)
+library(tidyverse)
 library(gamlss)
-library(ggplot2)
 library(DHARMa)
 library(glmmTMB)
 library(effectsize)
@@ -121,35 +119,3 @@ for (i in seq_len(nrow(pairwise_combos))) {
 
 #Inspect the assembled table
 print(pairwise_results)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## NEW! 24 June 2026 Analysis table for Within-leaf temperature range (Fig 1 panel a). --> Didn't work, the model result was not reliable.
-
-Temp_range <- read_csv("Leaf_temp_variation_summary.csv")
-hist(Temp_range$temp_range)
-
-Temp_range_dlnorm <- glmmTMB(
-  Temp_range_log ~
-    HW_intensity * SWA_level + (1 | Plant_id/Leaf_id),
-  dispformula = ~ HW_intensity * SWA_level,
-  data = Temp_range,
-  family = gaussian(link = "identity")
-) 
-
-plot(simulateResiduals(Temp_range_dlnorm))
-summary_model <- summary(Temp_range_dlnorm)
-
-coef_summary <- coef(Temp_range_dlnorm)

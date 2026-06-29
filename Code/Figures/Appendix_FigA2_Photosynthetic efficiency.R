@@ -5,8 +5,7 @@
 Main_data.csv
 
 #Load packages
-library(dplyr)
-library(readr)
+library(tidyverse)
 library(viridis)
 
 #Set working directory to the folder containing code and data

@@ -6,7 +6,6 @@ Leaf_temperature_day3.csv
 Leaf_temperature_variation.csv
 
 #R Packages needed
-library(ggplot2)
 library(tidyverse)
 library(ggpubr)
 
