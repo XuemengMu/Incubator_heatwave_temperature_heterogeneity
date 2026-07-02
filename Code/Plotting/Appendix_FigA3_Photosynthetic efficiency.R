@@ -66,7 +66,7 @@ Fvfm_plot <- ggplot(Fv_Fm_data, aes(x = Day)) +
 
 Fvfm_plot
 
-ggsave("FvFm_plot.png", 
+ggsave("Fv_Fm.tiff", 
        plot = Fvfm_plot, 
        width = 6, 
        height = 6, 
