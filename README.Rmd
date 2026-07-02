@@ -12,28 +12,35 @@ This repository contains the data and R scripts used to analyse the effects of h
 
 ## Repository structure
 
-text
+```text
 .
 ├── Data/       # Datasets used in the analyses
 ├── Code/       # R scripts for analysis and figures
+├── Figures/    # Figures generated for the manuscript
 └── README.md
+```
 
 ## Data
 
-The Data/ folder contains the cleaned datasets used for statistical analyses and figure production.
+The `Data/` folder contains the cleaned datasets used for statistical analyses and figure production.
 
 ## Code
 
-The scripts in the Code/ folder reproduce the analyses and figures reported in the manuscript.
+The scripts in the `Code/` folder reproduce the analyses and figures reported in the manuscript.
 
 Please run them in numerical order:
 
-1. GLMM_statistics.R
-2. LM_statistics.R
-3. Figures.R
+1. `GLMM_statistics.R`
+2. `LM_statistics.R`
+3. `Plotting.R`
+
+## Figures
+
+The `Figures/` folder contains the figures generated from the analysis scripts and used in the manuscript.
 
 ## Required R packages
 
+```r
 install.packages(
   c(
     "tidyverse",
@@ -51,7 +58,8 @@ install.packages(
     "effectsize"
   )
 )
+```
 
 ## Reproducibility
 
-To reproduce the analyses, clone or download this repository, open it in RStudio, and run the scripts in the order listed above.
+To reproduce the analyses and figures, clone or download this repository, open it in RStudio or Positron, and run the scripts in the order listed above.

@@ -78,4 +78,4 @@ LWP_fig <- ggplot(
 
 LWP_fig
 
-ggsave("~/Downloads/LWP_fig3.tiff", LWP_fig, width = 6, height = 3)
+ggsave("Leaf_water_potential.tiff", LWP_fig, width = 6, height = 3)

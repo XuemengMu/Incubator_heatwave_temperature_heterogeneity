@@ -119,5 +119,4 @@ final_plot <- arrangeGrob(combined,
                           ncol = 1,
                           heights = unit.c(unit(1, "null"),
                                            unit(1.5, "lines")))
-ggsave("Leaf_number_difference.png", plot = final_plot, width = 9, height = 6.5)
-
+ggsave("Leaf_number_difference.tiff", plot = final_plot, width = 9, height = 6.5)
