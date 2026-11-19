@@ -1,8 +1,8 @@
 #Title: Heatwaves increase sub-leaf-scale heterogeneity in leaf temperature
 #2025
 
-#Datasets needed
-Leaf_temperature_day3.csv
+#Datasets needed: Data/Leaf_temperature_day3.csv
+#Run from the project root (open the .Rproj file).
 
 #Load packages
 library(gt)
@@ -14,54 +14,60 @@ library(DHARMa)
 library(glmmTMB)
 library(effectsize)
 
-#Set working directory to the folder containing code and data
-setwd("~/Downloads")
-
 #Import data
-Temp_data <- subset(read.csv("Leaf_temperature_day3.csv"), select = -X)
+Temp_data <- read.csv("Data/Leaf_temperature_day3.csv")
 Temp_data <- Temp_data %>%
     dplyr::mutate(across(c(HW_intensity, SWA_level, Plant_id), as.factor))
 
 
 ##### Table 1. glmmTMB conditional- and dispersion-model estimated effects #####----
-#Model with leaf temperature log-transformed TWICE
-Temp_data$log10_log10_Leaf_temperature <- log10(log10(Temp_data$Leaf_temperature))
-Temp_dlnorm <- glmmTMB(
-  log10_log10_Leaf_temperature ~
-    HW_intensity * SWA_level + (1 | Plant_id/Leaf_id),
-  dispformula = ~ HW_intensity * SWA_level,
-  data = Temp_data,
-  family = gaussian(link = "identity")
-) 
-
-plot(simulateResiduals(Temp_dlnorm))
-summary_model <- summary(Temp_dlnorm)
-
-coef_summary <- coef(summary_model)
-
-#Model without log-transformation on leaf temperature (as a comparison only)
-Temp_dlnorm_rm <- glmmTMB(
-   Leaf_temperature ~
+#Main model: leaf temperature on its original scale (degrees C).
+#  - Conditional-model coefficients are differences in leaf temperature (degrees C)
+#    relative to the reference group (Control, Dry).
+#  - Dispersion-model coefficients are on the log(SD) scale for the gaussian family:
+#    exp(beta) = multiplicative change in within-leaf SD; exp(2*beta) = change in variance.
+Temp_glmm <- glmmTMB(
+  Leaf_temperature ~
     HW_intensity * SWA_level + (1 | Plant_id / Leaf_id),
   dispformula = ~ HW_intensity * SWA_level,
   data = Temp_data,
   family = gaussian(link = "identity")
-) 
-plot(simulateResiduals(Temp_dlnorm_rm))
+)
+
+plot(simulateResiduals(Temp_glmm))
+summary_model <- summary(Temp_glmm)
+
+coef_summary <- coef(summary_model)
+
+#Sensitivity analysis only: same model on log10(log10(leaf temperature)).
+#Effects have the same sign and similar magnitude (see Transformation_diagnostics.R).
+Temp_data$log10_log10_Leaf_temperature <- log10(log10(Temp_data$Leaf_temperature))
+Temp_glmm_loglog <- glmmTMB(
+  log10_log10_Leaf_temperature ~
+    HW_intensity * SWA_level + (1 | Plant_id / Leaf_id),
+  dispformula = ~ HW_intensity * SWA_level,
+  data = Temp_data,
+  family = gaussian(link = "identity")
+)
+plot(simulateResiduals(Temp_glmm_loglog))
 
 
 #Extract coefficients
 fixed_coefs <- coef_summary$cond %>%
   as.data.frame() %>%
-  gt() %>%
-  tab_header(title = "Fixed coefficients in glmmTMB on leaf temperature") %>%
+  gt(rownames_to_stub = TRUE) %>%
+  tab_header(title = "Conditional-model coefficients: leaf temperature (°C)") %>%
   fmt_number(decimals = 3)
 
 disp_coefs <- coef_summary$disp %>%
   as.data.frame() %>%
-  gt() %>%
-  tab_header(title = "Dispersion coefficients in glmmTMB on leaf temperature variance") %>%
+  mutate(SD_ratio = exp(Estimate)) %>%   #within-leaf SD relative to reference group
+  gt(rownames_to_stub = TRUE) %>%
+  tab_header(title = "Dispersion-model coefficients: within-leaf log(SD) of leaf temperature") %>%
   fmt_number(decimals = 3)
+
+fixed_coefs
+disp_coefs
 
 
 
