@@ -15,9 +15,6 @@ library(DHARMa)
 library(glmmTMB)
 library(effectsize)
 
-#Set working directory to the folder containing code and data
-setwd("~/Downloads")
-
 #Import data
 Temp_data <- read.csv("Leaf_temperature_day3.csv")
 Temp_data <- Temp_data %>%
@@ -42,14 +39,15 @@ coef_summary <- coef(summary_model)
 #Extract coefficients
 fixed_coefs <- coef_summary$cond %>%
   as.data.frame() %>%
-  gt() %>%
-  tab_header(title = "Fixed coefficients in glmmTMB on leaf temperature") %>%
+  gt(rownames_to_stub = TRUE) %>%
+  tab_header(title = "Conditional-model coefficients: leaf temperature (°C)") %>%
   fmt_number(decimals = 3)
 
 disp_coefs <- coef_summary$disp %>%
   as.data.frame() %>%
-  gt() %>%
-  tab_header(title = "Dispersion coefficients in glmmTMB on leaf temperature variance") %>%
+  mutate(SD_ratio = exp(Estimate)) %>%   #within-leaf SD relative to reference group
+  gt(rownames_to_stub = TRUE) %>%
+  tab_header(title = "Dispersion-model coefficients: within-leaf log(SD) of leaf temperature") %>%
   fmt_number(decimals = 3)
 
 #Test only: Model with leaf temperature log-transformed TWICE as a comparison
