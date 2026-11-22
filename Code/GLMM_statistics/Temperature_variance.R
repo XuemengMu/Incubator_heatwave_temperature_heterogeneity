@@ -15,13 +15,13 @@ library(DHARMa)
 library(glmmTMB)
 library(effectsize)
 
+
+##### Table 1. glmmTMB conditional- and dispersion-model estimated effects of within-leaf temperatures on Day 3 #####----
 #Import data
 Temp_data <- read.csv("Leaf_temperature_day3.csv")
 Temp_data <- Temp_data %>%
-    dplyr::mutate(across(c(HW_intensity, SWA_level, Plant_id), as.factor))
+  dplyr::mutate(across(c(HW_intensity, SWA_level, Plant_id), as.factor))
 
-
-##### Table 1. glmmTMB conditional- and dispersion-model estimated effects of within-leaf temperatures on Day 3 #####----
 #Model with log-transformation on leaf temperature 
 Temp_dlnorm <- glmmTMB(
   log10(Leaf_temperature) ~
