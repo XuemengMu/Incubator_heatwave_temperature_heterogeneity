@@ -15,7 +15,7 @@ library(DHARMa)
 library(glmmTMB)
 library(effectsize)
 
-
+setwd("~/Downloads")
 ##### Table 1. glmmTMB conditional- and dispersion-model estimated effects of within-leaf temperatures on Day 3 #####----
 #Import data
 Temp_data <- read.csv("Leaf_temperature_day3.csv")
@@ -76,9 +76,9 @@ Temp_data_day10 <- Temp_data_day10 %>%
 #Model with log-transformation on leaf temperature 
 Temp_dlnorm_day10 <- glmmTMB(
   log10(Leaf_temperature) ~
-    HW_intensity * SWA_level + (1 | Plant_id / Leaf_id),
-  dispformula = ~ HW_intensity * SWA_level,
-  data = Temp_data,
+    HW_intensity + (1 | Plant_id / Leaf_id),
+  dispformula = ~ HW_intensity,
+  data = Temp_data_day10,
   family = gaussian(link = "identity")
 ) 
 
@@ -99,6 +99,7 @@ disp_coefs <- coef_summary_day10$disp %>%
   gt() %>%
   tab_header(title = "Dispersion coefficients in glmmTMB on leaf temperature variance") %>%
   fmt_number(decimals = 3)
+
 
 
 ##### Table A2. Pairwise Comparisons of Within-Leaf Temperature Variance #####----
@@ -154,4 +155,13 @@ for (i in seq_len(nrow(pairwise_combos))) {
 }
 
 #Inspect the assembled table
+print(pairwise_results)
+
+# Adjust p-values for multiple pairwise comparisons
+pairwise_results$p_adj <- p.adjust(
+  pairwise_results$p_value,
+  method = "holm"
+)
+
+# Inspect the results
 print(pairwise_results)
