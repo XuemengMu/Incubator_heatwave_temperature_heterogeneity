@@ -64,10 +64,57 @@ disp_coefs <- coef_summary$disp %>%
   mutate(SD_ratio = exp(Estimate)) %>%   #within-leaf SD relative to reference group
   gt(rownames_to_stub = TRUE) %>%
   tab_header(title = "Dispersion-model coefficients: within-leaf log(SD) of leaf temperature") %>%
-  fmt_number(decimals = 3)
+  fmt_number(decimals = 3) %>%
+  tab_source_note(paste(
+    "Dispersion model: log link on the residual standard deviation (sigma, degrees C),",
+    "as parameterised by glmmTMB for the gaussian family; log(sigma) = X*beta.",
+    "Estimates are differences in log(sigma) relative to the reference group (Control, Dry).",
+    "exp(beta) = fold-change in residual SD; exp(2*beta) = fold-change in residual variance."
+  ))
 
 fixed_coefs
 disp_coefs
+
+
+#Back-transformed dispersion results: residual SD (degrees C) per treatment group,
+#and fold-changes in SD and variance for heatwave vs control at each water level.
+#Wald 95% CIs on the log(sigma) scale, then exponentiated. Pixels are treated as
+#independent residuals, so these CIs are narrower than leaf-level replication supports.
+b_disp <- fixef(Temp_glmm)$disp
+V_disp <- vcov(Temp_glmm)$disp
+grid_disp <- expand.grid(HW_intensity = levels(Temp_data$HW_intensity),
+                         SWA_level    = levels(Temp_data$SWA_level))
+X_disp <- model.matrix(~ HW_intensity * SWA_level, grid_disp)
+eta    <- drop(X_disp %*% b_disp)
+se_eta <- sqrt(diag(X_disp %*% V_disp %*% t(X_disp)))
+
+group_sigma <- grid_disp %>%
+  mutate(sigma_C = exp(eta),
+         lower   = exp(eta - 1.96 * se_eta),
+         upper   = exp(eta + 1.96 * se_eta))
+
+disp_contrast <- function(hw, swa) {
+  L  <- X_disp[grid_disp$HW_intensity == hw & grid_disp$SWA_level == swa, ] -
+        X_disp[grid_disp$HW_intensity == "Control" & grid_disp$SWA_level == swa, ]
+  est <- sum(L * b_disp)
+  se  <- sqrt(drop(t(L) %*% V_disp %*% L))
+  tibble(contrast  = paste0(hw, " vs Control (", swa, ")"),
+         log_SD    = est,
+         SD_ratio  = exp(est),     SD_lower  = exp(est - 1.96 * se),     SD_upper  = exp(est + 1.96 * se),
+         var_ratio = exp(2 * est), var_lower = exp(2 * (est - 1.96 * se)), var_upper = exp(2 * (est + 1.96 * se)))
+}
+disp_contrasts <- bind_rows(disp_contrast("Mild", "Dry"),    disp_contrast("Intense", "Dry"),
+                            disp_contrast("Mild", "Wet"),    disp_contrast("Intense", "Wet"))
+
+group_sigma %>%
+  gt() %>%
+  tab_header(title = "Model-estimated within-leaf residual SD of leaf temperature (°C)") %>%
+  fmt_number(decimals = 2)
+
+disp_contrasts %>%
+  gt() %>%
+  tab_header(title = "Heatwave effects on within-leaf temperature dispersion, back-transformed") %>%
+  fmt_number(decimals = 2)
 
 
 
